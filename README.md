@@ -9,7 +9,7 @@ It uses 2 basic packages for all Farport projects:
 
 ## Objective
 
-1. A quick way to scaffold a Typescript project with test
+1. A quick way to scaffold a NestJS project with test
 1. Propose a structure with directory such as `core` and `dto`
 1. Make sure to leverage type safety provided by Typescript with strict config (see `tsconfig.json`)
 1. Ensure that typescript code is clear of error and formatted correctly (via `yarn lint`)

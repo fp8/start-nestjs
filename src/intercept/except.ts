@@ -1,3 +1,8 @@
+import type { Response } from 'express';
+
+import { IJson, KV } from 'jlog-facade';
+import { ValidationError } from 'class-validator';
+import { EntityCreationError } from '@fp8/simple-config';
 import {
   ExceptionFilter,
   Catch,
@@ -5,10 +10,10 @@ import {
   HttpException,
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
-import type { Response } from 'express';
-import { IJson } from 'jlog-facade';
-import { ExceptionWithPayload } from '../core';
-import { EntityCreationError } from '@fp8/simple-config';
+
+import { ExceptionWithPayload, createLogger } from '@proj/core';
+
+const logger = createLogger('GlobalExceptionFilter');
 
 interface StandardError {
   statusCode: number;
@@ -31,15 +36,29 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     let statusCode = 500;
     let payload: IJson | undefined = undefined;
 
-    if (exception instanceof ExceptionWithPayload) {
+    if (
+      exception instanceof ValidationError ||
+      exception instanceof EntityCreationError
+    ) {
+      statusCode = 400;
+      let error: EntityCreationError;
+      if (exception instanceof EntityCreationError) {
+        error = exception;
+      } else {
+        error = new EntityCreationError(exception.message, [exception]);
+      }
+      payload = error.fields as unknown as IJson;
+    } else if (exception instanceof ExceptionWithPayload) {
       statusCode = exception.getStatus();
       payload = exception.payload;
     } else if (exception instanceof HttpException) {
       statusCode = exception.getStatus();
     } else {
       // Print out exception stack trace
-      // eslint-disable-next-line no-console
-      console.log(exception.stack);
+      logger.warn(
+        `Unknown exception translating to 500: ${exception.message}`,
+        KV.of('stacktrace', exception.stack),
+      );
     }
 
     const error: StandardError = {

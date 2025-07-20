@@ -2,33 +2,14 @@ const { resolve } = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = (options, webpack) => {
+    /**
+     * Ignore the modules that are optional for nestjs.  These
+     * modules are ignored as they cannot be resolved.
+     */
     const lazyImports = [
         '@nestjs/microservices/microservices-module',
         '@nestjs/websockets/socket-module',
     ];
-
-    const optimization = {
-        minimize: true,
-        minimizer: [
-            new TerserPlugin({
-                terserOptions: {
-                    compress: {
-                        // Disable most compression options that might break jlog-facade
-                        drop_console: false,
-                        drop_debugger: false,
-                    },
-                    mangle: {
-                        // Must keep the class names for jlog-facade and class-transformer
-                        keep_classnames: true,
-                    },
-                    format: {
-                        comments: false,
-                    },
-                },
-                extractComments: false,
-            }),
-        ],
-    };
 
     return {
         ...options,
@@ -46,9 +27,31 @@ module.exports = (options, webpack) => {
             ]
         },
         output: {
+            // Override the output path to build directory
             path: resolve(__dirname, 'build'),
         },
-        optimization,
+        optimization: {
+            minimize: true,
+            minimizer: [
+                new TerserPlugin({
+                    terserOptions: {
+                        compress: {
+                            // Disable most compression options that might break jlog-facade
+                            drop_console: false,
+                            drop_debugger: false,
+                        },
+                        mangle: {
+                            // Must keep the class names for jlog-facade and class-transformer
+                            keep_classnames: true,
+                        },
+                        format: {
+                            comments: false,
+                        },
+                    },
+                    extractComments: false,
+                }),
+            ],
+        },
         plugins: [
             ...options.plugins,
             new webpack.IgnorePlugin({

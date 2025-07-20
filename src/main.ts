@@ -19,7 +19,7 @@ import { GlobalExceptionFilter } from './intercept/except';
 
 const logger = new AppLogger();
 
-async function createNestServer(): Promise<{
+export async function createNestServer(): Promise<{
   app: INestApplication<any>;
   config: ConfigData;
 }> {
