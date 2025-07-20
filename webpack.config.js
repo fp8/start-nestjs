@@ -13,7 +13,9 @@ module.exports = (options, webpack) => {
 
     return {
         ...options,
+        mode: 'production',
         externals: [],
+        devtool: 'source-map',
         module: {
             rules: [
                 {
@@ -29,26 +31,34 @@ module.exports = (options, webpack) => {
         output: {
             // Override the output path to build directory
             path: resolve(__dirname, 'build'),
+            clean: true,
         },
         optimization: {
             minimize: true,
+            usedExports: true,
+            sideEffects: false,
             minimizer: [
                 new TerserPlugin({
                     terserOptions: {
                         compress: {
                             // Disable most compression options that might break jlog-facade
-                            drop_console: false,
-                            drop_debugger: false,
+                            drop_console: true,
+                            drop_debugger: true,
+                            pure_funcs: ['console.log'],
+                            dead_code: true,
+                            unused: true,
                         },
                         mangle: {
                             // Must keep the class names for jlog-facade and class-transformer
                             keep_classnames: true,
+                            keep_fnames: true,
                         },
                         format: {
                             comments: false,
                         },
                     },
                     extractComments: false,
+                    parallel: true,
                 }),
             ],
         },

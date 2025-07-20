@@ -5268,6 +5268,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jlog-facade@npm:^0.10.0":
+  version: 0.10.0
+  resolution: "jlog-facade@npm:0.10.0"
+  checksum: 10/eee5a7b5ce056d569892f2ddc209128fb3ad5f07f854b9c8526cd8f7981fa96f9b82a73b773a38eb1450345f3f6edc09f85e9b075d2614b37304075a5a9e3779
+  languageName: node
+  linkType: hard
+
 "jlog-facade@npm:^0.9.1":
   version: 0.9.1
   resolution: "jlog-facade@npm:0.9.1"
@@ -6831,7 +6838,7 @@ __metadata:
     eslint-config-prettier: "npm:^10.0.1"
     eslint-plugin-prettier: "npm:^5.2.2"
     jest: "npm:^30.0.4"
-    jlog-facade: "npm:^0.9.1"
+    jlog-facade: "npm:^0.10.0"
     prettier: "npm:^3.4.2"
     reflect-metadata: "npm:^0.2.2"
     rxjs: "npm:^7.8.2"

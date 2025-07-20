@@ -1,6 +1,6 @@
 {
   "name": "start-nestjs",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A project template serving as scaffolding for a NestJS project",
   "author": "marcos.lin@farport.co",
   "license": "MIT",
@@ -15,8 +15,8 @@
     "build:ts": "nest build --path ./tsconfig.build.json",
     "build:webpack": "nest build --webpack",
     "build": "yarn lint && yarn build:clean && yarn build:ts && yarn build:alias && yarn test:dist",
-    "lint:format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "lint:ts": "eslint \"{src,test}/**/*.ts\" --fix",
+    "lint:format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" \"test-e2e/**/*.ts\"",
+    "lint:ts": "eslint \"{src,test,test-e2e}/**/*.ts\" --fix",
     "lint": "yarn lint:ts && yarn lint:format",
     "test:e2e": "FP8_ENV=utest jest --config ./jest.config.e2e.ts",
     "test:unit": "FP8_ENV=utest jest --config ./jest.config.ts",
@@ -58,7 +58,7 @@
     "@nestjs/platform-express": "^11.1.5",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
-    "jlog-facade": "^0.9.1",
+    "jlog-facade": "^0.10.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2"
   }

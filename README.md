@@ -46,6 +46,38 @@ the compiled version of code is tested.  This is done at the end of the `build` 
 
 The reference to `@proj` is removed in the `./dist` via the `build:alias` task. 
 
+## Building Project
+
+This project is configured with 2 different build options:
+
+### yarn build
+
+This is the normal build process that uses tsc so all the Typescript package structure are preserved.  This
+option is a must if the objective is to create a share library.  The output of the build is at `./dist`
+directory.
+
+You should always run this option to ensure that your code can be built correctly.  This task also run lint
+and format to ensure that your code is formatted correctly as well.
+
+### yarn build:webpack
+
+This is an option that uses webpack to bundle the entire application into a single `main.js` file.  The
+primary goal of this build is optmize the startup time.  In this project, the startup time does down
+from `240.78ms` to `98.92ms`.  However, this option **must not** be used if you wish to create a share
+library.
+
+If you choose to deploy the bundled code from `build:webpack`, you must ensure that you have e2e tests
+that covers all the route of your service.  As `test:e2e` is hard coded to run from `localhost:8080`,
+you must start the local version of the server before running the e2e tests:
+
+```bash
+# In one terminal
+yarn build:webpack && node build/main.js
+
+# In another terminal
+yarn test:e2e
+```
+
 # Run the sample project
 
 To run this sample app, simple do:

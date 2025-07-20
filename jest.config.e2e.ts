@@ -4,7 +4,7 @@ const config: Config = {
   moduleFileExtensions: ["js", "ts"],
   rootDir: ".",
   testEnvironment: "node",
-  testMatch: ["**/test-e2e/*.e2e.ts", "**/test/**/*.e2e.ts"],
+  testMatch: ["**/test-e2e/*.e2e.ts", "**/test-e2e/**/*.e2e.ts"],
     "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   },

@@ -3,6 +3,7 @@
     "allowSyntheticDefaultImports": true,
     "baseUrl": "./",
     "declaration": true,
+    "declarationMap": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
@@ -26,6 +27,6 @@
     "strictNullChecks": true,
     "target": "ES2023"
   },
-  "include": ["src", "test"],
+  "include": ["src", "test", "test-e2e"],
   "exclude": ["node_modules", "app"]
 }
