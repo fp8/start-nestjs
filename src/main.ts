@@ -1,22 +1,25 @@
 import 'reflect-metadata';
 
+// Start measuring startup time
+const start = process.hrtime();
+
 // Setup logger
 import { LogLevel, SimpleTextDestination } from 'jlog-facade';
 SimpleTextDestination.use(LogLevel.OFF);
-import { EntityCreationError } from '@fp8/simple-config';
 
-import { ConfigData } from './dto/config.dto';
+import { ValidationError } from 'class-validator';
+import { EntityCreationError } from '@fp8/simple-config';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 
 import { AppLogger } from './core';
 import { AppModule } from './app.module';
-import { HttpAdapterHost, NestFactory } from '@nestjs/core';
-import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { ConfigData } from './dto/config.dto';
 import { GlobalExceptionFilter } from './intercept/except';
-import { ValidationError } from 'class-validator';
 
 const logger = new AppLogger();
 
-async function createNestServer(): Promise<{
+export async function createNestServer(): Promise<{
   app: INestApplication<any>;
   config: ConfigData;
 }> {
@@ -50,5 +53,9 @@ createNestServer()
     const port = config.app.getPort();
     logger.log(`Starting server on port ${port}`);
     return app.listen(port);
+  })
+  .then(() => {
+    const end = process.hrtime(start);
+    logger.log(`Server started in ${end[0]}s ${end[1] / 1000000}ms`);
   })
   .catch((err) => logger.error('Server broken', err));

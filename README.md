@@ -9,10 +9,11 @@ It uses 2 basic packages for all Farport projects:
 
 ## Objective
 
-1. A quick way to scaffold a Typescript project with test
+1. A quick way to scaffold a NestJS project with test
 1. Propose a structure with directory such as `core` and `dto`
 1. Make sure to leverage type safety provided by Typescript with strict config (see `tsconfig.json`)
 1. Ensure that typescript code is clear of error and formatted correctly (via `yarn lint`)
+1. Enable the building of the deployable using `webpack` to create a bundle
 
 ## Usage
 
@@ -21,11 +22,10 @@ Assuming that you are creating a new `start-proj` project, do the following:
 ```bash
 mkdir start-proj
 cd start-proj
-curl -L https://github.com/fp8/start-nestjs/archive/refs/tags/0.1.0.tar.gz | tar -xv --strip=1
+curl -L https://github.com/fp8/start-nestjs/archive/refs/tags/0.2.0.tar.gz | tar -xv --strip=1
 ```
 
-The structure of the project should be usable as is.  The use of `start.ts` encapsulate all the complexity
-related to project startup.
+The structure of the project should be usable as is.
 
 Some changes needed:
 
@@ -44,7 +44,46 @@ The alias `@proj` is created to point to `./src` directory.  This allow you to a
 in your code.  Use of `@proj` is specially import in tests as `test:dist` task will switch to use `./dist` so
 the compiled version of code is tested.  This is done at the end of the `build` task.
 
-The reference to `@proj` is removed in the `./dist` via the `build:alias` task. 
+The reference to `@proj` is removed in the `./dist` via the `build:alias` task.   For task `build:webpack`, the
+alias is also removed by the bundler.
+
+## Building Project
+
+This project is configured with 2 different build options.  Both option create sourceMap as it will allow NodeJS
+to print out correct stacktrace in reference to the original typescript source code instead of the generated 
+js file.  To use it, do:
+
+```bash
+node --enable-source-maps dist/main
+```
+
+### yarn build
+
+This is the normal build process that uses tsc so all the Typescript package structure are preserved.  This
+option is a must if the objective is to create a share library.  The output of the build is at `./dist`
+directory.
+
+You should always run this option to ensure that your code can be built correctly.  This task also run lint
+and format to ensure that your code is formatted correctly as well.
+
+### yarn build:webpack
+
+This is an option that uses webpack to bundle the entire application into a single `main.js` file.  The
+primary goal of this build is optmize the startup time.  In this project, the startup time goes down
+from `240.78ms` to `98.92ms`.  However, this option **must not** be used if you wish to create a share
+library.
+
+If you choose to deploy the bundled code from `build:webpack`, you must ensure that you have e2e tests
+that covers all the route of your service.  As `test:e2e` is hard coded to run from `localhost:8080`,
+you must start the local version of the server before running the e2e tests:
+
+```bash
+# In one terminal
+yarn build:webpack && node --enable-source-maps build/main.js
+
+# In another terminal
+yarn test:e2e
+```
 
 # Run the sample project
 
