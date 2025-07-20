@@ -15,6 +15,11 @@ export class HomeController {
     return { message: this.homeService.getWelcomeMessage() };
   }
 
+  @Get('/error')
+  getError() {
+    throw new Error('This is an unknown error');
+  }
+
   @Post('/')
   getRootWithDate(@Body() nowRequest: NowRequest) {
     logger.info(`Received POST request with date: ${nowRequest.now}`);
